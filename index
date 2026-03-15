@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Foster or Kill Innovation? — Quick Culture Game</title>
+  <meta name="description" content="A fast, mobile-friendly game to learn about innovation culture. Bath Spa University inspired theme." />
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#003366">
+  
+  <style>
+    /* === BATH SPA INSPIRED THEME === */
+    :root {
+      /* Bath Spa Blues - based on brand guidelines */
+      --bsu-dark: #002147;      /* Deep Navy */
+      --bsu-primary: #003366;   /* Primary Blue */
+      --bsu-medium: #0055A4;    /* Medium Blue */
+      --bsu-light: #6699CC;     /* Light Blue */
+      --bsu-pale: #E6F0FA;      /* Pale Blue */
+      
+      /* Semantic Colors */
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.15);
+      --success-text: #065f46;
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.15);
+      --danger-text: #7f1d1d;
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.15);
+      --warning-text: #78350f;
+      
+      /* UI Colors - HIGH CONTRAST */
+      --bg-dark: #0f172a;
+      --bg-card: #ffffff;
+      --bg-card-dark: #1e293b;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-on-blue: #ffffff;
+      --text-on-dark: #f8fafc;
+      --border: rgba(0, 51, 102, 0.3);
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 25px 50px -12px rgba(0, 51, 102, 0.35);
+      
+      /* Spacing & Radius */
+      --radius: 16px;
+      --radius-lg: 24px;
+      --spacing-sm: 10px;
+      --spacing-md: 18px;
+      --spacing-lg: 28px;
+      --spacing-xl: 40px;
+      
+      /* Transitions */
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: all 0.3s ease;
+    }
+
+    /* Dark mode support - with HIGH CONTRAST */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-card: #1e293b;
+        --bg-card-dark: #0f172a;
+        --text-main: #f1f5f9;
+        --text-muted: #cbd5e1;
+        --border: rgba(100, 150, 200, 0.4);
+        --success-text: #6ee7b7;
+        --danger-text: #fca5a5;
+        --warning-text: #fcd34d;
+      }
+    }
+
+    /* === RESET & BASE === */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+    
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: 20px; /* ✅ INCREASED FROM 16px */
+      line-height: 1.7;
+      color: var(--text-main);
+      background: linear-gradient(135deg, var(--bsu-dark) 0%, var(--bsu-primary) 50%, var(--bsu-medium) 100%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--spacing-md);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Reduce motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+
+    /* === LAYOUT === */
+    .container {
+      width: 100%;
+      max-width: 560px; /* Slightly wider for better readability */
+      margin: 0 auto;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .screen.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* === CARDS === */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      box-shadow: var(--shadow-lg);
+      margin: var(--spacing-md) 0;
+      border: 2px solid var(--border);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .card {
+        background: var(--bg-card-dark);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-color: rgba(100, 150, 200, 0.5);
+      }
+    }
+
+    /* === TYPOGRAPHY - ENHANCED FOR READABILITY === */
+    h1 {
+      font-size: 2.2rem; /* ✅ INCREASED */
+      font-weight: 800;
+      color: var(--text-on-blue);
+      text-align: center;
+      margin-bottom: var(--spacing-sm);
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .tagline {
+      text-align: center;
+      color: var(--bsu-pale);
+      font-size: 1.3rem; /* ✅ INCREASED */
+      font-weight: 500;
+      margin-bottom: var(--spacing-lg);
+      opacity: 0.98;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    
+    h2 {
+      font-size: 1.6rem; /* ✅ INCREASED */
+      font-weight: 700;
+      color: var(--bsu-primary);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      h2 { color: var(--bsu-light); }
+    }
+    
+    p {
+      margin-bottom: var(--spacing-md);
+      color: var(--text-main);
+      font-size: 1.05rem; /* ✅ INCREASED */
+    }
+    
+    .help {
+      font-size: 1rem; /* ✅ INCREASED */
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: var(--spacing-sm);
+      font-weight: 500;
+    }
+    
+    .tiny {
+      font-size: 0.9rem; /* ✅ INCREASED */
+      color: var(--bsu-pale);
+      opacity: 0.9;
+      text-align: center;
+      margin-top: var(--spacing-xl);
+      font-weight: 500;
+    }
+
+    /* === LISTS === */
+    ul {
+      padding-left: var(--spacing-lg);
+      margin: var(--spacing-md) 0;
+      color: var(--text-main);
+      font-size: 1.05rem; /* ✅ INCREASED */
+    }
+    
+    li {
+      margin-bottom: var(--spacing-md);
+      line-height: 1.8;
+    }
+    
+    li strong {
+      color: var(--bsu-primary);
+      font-weight: 800;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      li strong { color: var(--bsu-light); }
+    }
+
+    /* === BUTTONS - LARGER & CLEARER === */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 28px; /* ✅ INCREASED PADDING */
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 1.15rem; /* ✅ INCREASED FONT */
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+      min-height: 56px; /* ✅ LARGER TOUCH TARGET */
+      touch-action: manipulation;
+      width: 100%;
+      max-width: 340px;
+      margin: var(--spacing-sm) auto;
+      letter-spacing: 0.3px;
+    }
+    
+    .btn:focus-visible {
+      outline: 4px solid var(--bsu-light);
+      outline-offset: 3px;
+    }
+    
+    .btn-primary {
+      background: var(--bsu-primary);
+      color: var(--text-on-blue);
+      box-shadow: 0 6px 20px rgba(0, 51, 102, 0.4);
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      background: var(--bsu-medium);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0, 51, 102, 0.5);
+    }
+    
+    .btn-primary:active:not(:disabled) {
+      transform: translateY(0);
+    }
+    
+    .btn-primary:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: var(--bsu-primary);
+      border: 3px solid var(--bsu-primary);
+      font-weight: 700;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .btn-secondary {
+        color: var(--bsu-light);
+        border-color: var(--bsu-light);
+      }
+    }
+    
+    .btn-secondary:hover:not(:disabled) {
+      background: rgba(0, 85, 164, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    .btn-success {
+      background: var(--success);
+      color: white;
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+    
+    .btn-success:hover:not(:disabled) {
+      background: #059669;
+      transform: translateY(-3px);
+    }
+    
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+    
+    .btn-danger:hover:not(:disabled) {
+      background: #dc2626;
+      transform: translateY(-3px);
+    }
+    
+    .btn.big {
+      font-size: 1.25rem; /* ✅ EVEN LARGER FOR MAIN ACTIONS */
+      padding: 20px 28px;
+      margin: var(--spacing-md) auto;
+    }
+
+    /* === TOGGLES === */
+    .toggles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-lg);
+      margin: var(--spacing-lg) 0;
+      justify-content: center;
+    }
+    
+    .switch {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 1.05rem; /* ✅ INCREASED */
+      color: var(--text-main);
+      font-weight: 500;
+    }
+    
+    .switch input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: relative;
+      width: 50px; /* ✅ LARGER */
+      height: 28px; /* ✅ LARGER */
+      background: var(--bsu-light);
+      border-radius: 999px;
+      transition: var(--transition);
+      flex-shrink: 0;
+      border: 2px solid rgba(0,0,0,0.1);
+    }
+    
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 22px; /* ✅ LARGER */
+      height: 22px; /* ✅ LARGER */
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: var(--transition);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    input:checked + .slider {
+      background: var(--bsu-primary);
+    }
+    
+    input:checked + .slider::before {
+      transform: translateX(22px);
+    }
+    
+    .switch .label {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* === HUD (Heads-Up Display) === */
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--spacing-sm) 0;
+      margin-bottom: var(--spacing-md);
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+    }
+    
+    .hud-left {
+      display: flex;
+      gap: var(--spacing-md);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .pill {
+      background: var(--bsu-primary);
+      color: var(--text-on-blue);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 1.05rem; /* ✅ INCREASED */
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .pill {
+        background: var(--bsu-light);
+        color: var(--bsu-dark);
+      }
+    }
+    
+    .timer {
+      width: 140px; /* ✅ LARGER */
+      height: 10px; /* ✅ LARGER */
+      background: rgba(255,255,255,0.3);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+      border: 2px solid rgba(255,255,255,0.5);
+    }
+    
+    .timer span {
+      display: block;
+      height: 100%;
+      width: 100%;
+      background: var(--bsu-light);
+      border-radius: 999px;
+      transition: width 0.1s linear;
+    }
+    
+    .timer.warning span {
+      background: var(--warning);
+      animation: pulse 1s infinite;
+    }
+    
+    .timer.danger span {
+      background: var(--danger);
+      animation: pulse 0.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.75; }
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* === SCENARIO === */
+    .scenario-title {
+      font-size: 1.5rem; /* ✅ INCREASED */
+      font-weight: 800;
+      color: var(--bsu-primary);
+      margin-bottom: var(--spacing-md);
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 3px solid var(--bsu-pale);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .scenario-title {
+        color: var(--bsu-light);
+        border-color: rgba(102, 153, 204, 0.4);
+      }
+    }
+    
+    .scenario-prompt {
+      font-size: 1.25rem; /* ✅ INCREASED */
+      line-height: 1.8;
+      margin-bottom: var(--spacing-lg);
+      color: var(--text-main);
+      font-weight: 500;
+    }
+    
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--spacing-md);
+      margin: var(--spacing-lg) 0;
+    }
+    
+    @media (min-width: 480px) {
+      .actions {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* === FEEDBACK === */
+    .feedback {
+      margin-top: var(--spacing-lg);
+      padding-top: var(--spacing-md);
+      border-top: 2px solid var(--border);
+      display: none;
+    }
+    
+    .feedback.show {
+      display: block;
+      animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 1.1rem; /* ✅ INCREASED */
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .badge.correct {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 2px solid var(--success);
+    }
+    
+    .badge.incorrect {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border: 2px solid var(--danger);
+    }
+    
+    .badge.timeout {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border: 2px solid var(--warning);
+    }
+    
+    .why {
+      font-size: 1.1rem; /* ✅ INCREASED */
+      line-height: 1.7;
+      color: var(--text-main);
+      margin-bottom: var(--spacing-md);
+      padding: var(--spacing-md);
+      background: var(--bsu-pale);
+      border-radius: var(--radius);
+      border-left: 5px solid var(--bsu-primary);
+      font-weight: 500;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+      .why {
+        background: rgba(102, 153, 204, 0.2);
+        border-left-color: var(--bsu-light);
+        color: var(--text-on-dark);
+      }
+    }
+    
+    .next {
+      margin-top: var(--spacing-md);
+    }
+
+    /* === RESULTS - HIGH CONTRAST FIX === */
+    .result-header {
+      text-align: center;
+      padding: var(--spacing-lg) 0;
+    }
+    
+    .result-score {
+      font-size: 3.5rem; /* ✅ INCREASED */
+      font-weight: 900;
+      color: #ffffff; /* ✅ WHITE FOR MAXIMUM CONTRAST */
+      text-shadow: 
+        0 0 10px rgba(0,0,0,0.5),
+        0 0 20px rgba(0,0,0,0.4),
+        0 3px 6px rgba(0,0,0,0.3);
+      margin: var(--spacing-sm) 0;
+      letter-spacing: -1px;
+    }
+    
+    .result-score-sub {
+      font-size: 1.3rem;
+      color: var(--bsu-pale);
+      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    
+    .result-badge {
+      font-size: 1.4rem; /* ✅ INCREASED */
+      font-weight: 800;
+      padding: 12px 24px;
+      border-radius: 14px;
+      display: inline-block;
+      margin: var(--spacing-md) 0;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    
+    .result-badge.excellent {
+      background: var(--success);
+      color: white;
+      border: 3px solid #065f46;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    }
+    
+    .result-badge.good {
+      background: #3b82f6;
+      color: white;
+      border: 3px solid #1d4ed8;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+    
+    .result-badge.try-again {
+      background: var(--danger);
+      color: white;
+      border: 3px solid #7f1d1d;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    }
+    
+    .result-actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-xl);
+    }
+    
+    @media (min-width: 480px) {
+      .result-actions {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+    
+    .confetti {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .confetti.active {
+      opacity: 1;
+    }
+
+    /* === FOOTER === */
+    .footer {
+      text-align: center;
+      padding: var(--spacing-lg) 0;
+      border-top: 2px solid var(--border);
+      margin-top: var(--spacing-xl);
+    }
+
+    /* === UTILITIES === */
+    .text-center { text-align: center; }
+    .mt-lg { margin-top: var(--spacing-lg); }
+    .mb-lg { margin-bottom: var(--spacing-lg); }
+    
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      :root {
+        --border: rgba(0, 0, 0, 0.7);
+        --shadow: none;
+        --shadow-lg: none;
+      }
+      .btn {
+        border: 3px solid currentColor;
+      }
+      .result-score {
+        text-shadow: none;
+        border: 3px solid white;
+        padding: 5px 15px;
+        border-radius: 10px;
+      }
+    }
+
+    /* === EXTRA: Print styles === */
+    @media print {
+      body {
+        background: white;
+        color: black;
+        padding: 0;
+      }
+      .card {
+        box-shadow: none;
+        border: 2px solid black;
+        background: white;
+        color: black;
+      }
+      .btn {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main id="app" class="container" aria-live="polite">
+    
+    <!-- INTRO / INSTRUCTIONS -->
+    <section id="screen-intro" class="screen active" aria-labelledby="intro-title">
+      <header class="intro-header">
+        <h1 id="intro-title">🌱 Foster or Kill Innovation?</h1>
+        <p class="tagline">A fast, phone‑friendly culture game</p>
+      </header>
+
+      <article class="card instructions">
+        <h2>How to Play</h2>
+        <ul>
+          <li>You will see <strong>5 short scenarios</strong> about workplace behaviour.</li>
+          <li>Choose: <strong>✅ Foster Innovation</strong> or <strong>🚫 Kill Innovation</strong>.</li>
+          <li>Each correct answer = <strong>100 points</strong> (maximum <strong>500</strong>).</li>
+          <li>After each answer, you will see a short explanation to help you learn.</li>
+          <li>Questions get harder as you play: easy → easy → medium → medium → hard.</li>
+        </ul>
+
+        <div class="toggles">
+          <label class="switch">
+            <input id="timerToggle" type="checkbox" />
+            <span class="slider" aria-hidden="true"></span>
+            <span class="label">⏱️ Timer (12 seconds)</span>
+          </label>
+
+          <label class="switch">
+            <input id="soundToggle" type="checkbox" checked />
+            <span class="slider" aria-hidden="true"></span>
+            <span class="label">🔊 Sound effects</span>
+          </label>
+        </div>
+
+        <button id="startBtn" class="btn btn-primary" aria-describedby="start-help">
+          ▶ Start Game
+        </button>
+        <p id="start-help" class="help text-center">
+          💡 Tip: Take your time. Learning is more important than speed!
+        </p>
+      </article>
+
+      <footer class="footer">
+        <p class="tiny">
+          Theme colours inspired by Bath Spa University blues. 
+          <br>Designed for ESL learners • Accessible • Mobile-friendly
+        </p>
+      </footer>
+    </section>
+
+    <!-- GAMEPLAY -->
+    <section id="screen-game" class="screen" aria-labelledby="game-title">
+      <header class="hud">
+        <div class="hud-left">
+          <h2 id="game-title" class="sr-only">Question</h2>
+          <div id="progressText" class="pill" aria-live="polite">Q1 / 5</div>
+          <div id="scoreText" class="pill" aria-live="polite">Score: 0</div>
+        </div>
+        <div class="hud-right">
+          <div id="timerBar" class="timer hidden" aria-hidden="true" role="progressbar" aria-valuemin="0" aria-valuemax="12" aria-valuenow="12">
+            <span id="timerFill"></span>
+          </div>
+        </div>
+      </header>
+
+      <article class="card scenario">
+        <h3 id="scenarioTitle" class="scenario-title"></h3>
+        <p id="scenarioPrompt" class="scenario-prompt"></p>
+
+        <div class="actions">
+          <button id="btnFoster" class="btn btn-success big" data-choice="foster" aria-label="Choose: This behaviour fosters innovation">
+            ✅ Foster Innovation
+          </button>
+          <button id="btnKill" class="btn btn-danger big" data-choice="kill" aria-label="Choose: This behaviour kills innovation">
+            🚫 Kill Innovation
+          </button>
+        </div>
+
+        <div id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true">
+          <div id="feedbackBadge" class="badge"></div>
+          <p id="feedbackText" class="why"></p>
+          <button id="nextBtn" class="btn btn-secondary next" disabled>
+            → Next Question
+          </button>
+        </div>
+      </article>
+    </section>
+
+    <!-- RESULTS - ENHANCED CONTRAST -->
+    <section id="screen-result" class="screen" aria-labelledby="result-title">
+      <header class="result-header">
+        <h2 id="result-title">🎉 Your Result</h2>
+        <p id="resultScore" class="result-score" aria-live="polite">0</p>
+        <p class="result-score-sub" aria-hidden="true">out of 500 points</p>
+        <p id="resultBadge" class="result-badge" aria-live="polite"></p>
+        <p id="resultMessage" class="text-center" style="color: var(--text-on-dark); font-size: 1.2rem; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.3);"></p>
+      </header>
+
+      <article class="card result-card">
+        <canvas id="confetti" class="confetti" aria-hidden="true"></canvas>
+        
+        <div class="result-actions">
+          <button id="playAgainBtn" class="btn btn-primary">
+            🔄 Play Again (New Questions)
+          </button>
+          <button id="backHomeBtn" class="btn btn-secondary">
+            🏠 Back to Instructions
+          </button>
+        </div>
+        
+        <div class="mt-lg text-center" style="font-size: 1.05rem; color: var(--text-muted); font-weight: 500;">
+          <p>💡 Each time you play, you get 5 different scenarios from a larger pool.</p>
+          <p>Play multiple times to learn more about innovation culture!</p>
+        </div>
+      </article>
+    </section>
+    
+  </main>
+
+  <script>
+    /**
+     * Foster or Kill Innovation? - Complete Game
+     * ✅ FIXED: Larger fonts, high contrast results, proper Q5→Results flow
+     * Enhanced for accessibility, mobile, and ESL learners
+     * Bath Spa University inspired theme
+     */
+    
+    // === GAME CONFIGURATION ===
+    const CONFIG = {
+      totalQuestions: 5,
+      pointsPerCorrect: 100,
+      timerDuration: 12,
+      scaffoldedDifficulty: ['easy', 'easy', 'medium', 'medium', 'hard'],
+      
+      scenarios: [
+        // EASY
+        { id: 1, difficulty: 'easy', prompt: "Your team shares ideas openly in meetings. Everyone can speak without fear.", correctAnswer: 'foster', explanation: "✅ Correct! When people feel safe to share ideas, innovation grows. Psychological safety is key for creativity." },
+        { id: 2, difficulty: 'easy', prompt: "A manager says: 'We only do things the way we've always done them.'", correctAnswer: 'kill', explanation: "✅ Correct! Refusing to try new methods stops innovation. Growth needs openness to change." },
+        { id: 3, difficulty: 'easy', prompt: "The company gives time for employees to work on their own creative projects.", correctAnswer: 'foster', explanation: "✅ Correct! Time for exploration leads to new ideas. Many innovations start as 'side projects'." },
+        { id: 4, difficulty: 'easy', prompt: "Mistakes are punished severely. People are afraid to try new things.", correctAnswer: 'kill', explanation: "✅ Correct! Fear of punishment stops people from taking risks. Innovation needs safe space to experiment." },
+        { id: 5, difficulty: 'easy', prompt: "Team members from different departments work together on new ideas.", correctAnswer: 'foster', explanation: "✅ Correct! Different perspectives create better solutions. Collaboration fuels innovation." },
+        
+        // MEDIUM
+        { id: 6, difficulty: 'medium', prompt: "Leaders make all decisions quickly without asking the team for input.", correctAnswer: 'kill', explanation: "✅ Correct! Top-down decisions miss valuable team insights. Inclusive decision-making leads to better innovations." },
+        { id: 7, difficulty: 'medium', prompt: "The company celebrates both successes AND lessons learned from failures.", correctAnswer: 'foster', explanation: "✅ Correct! Learning from failure is essential for innovation. A growth mindset turns setbacks into progress." },
+        { id: 8, difficulty: 'medium', prompt: "New ideas must go through 10 levels of approval before testing.", correctAnswer: 'kill', explanation: "✅ Correct! Too many approvals slow down innovation. Agile testing with quick feedback loops works better." },
+        { id: 9, difficulty: 'medium', prompt: "Employees receive training on creative thinking and problem-solving methods.", correctAnswer: 'foster', explanation: "✅ Correct! Innovation is a skill that can be learned. Training gives people tools to generate better ideas." },
+        { id: 10, difficulty: 'medium', prompt: "The office has quiet spaces for deep work AND collaborative areas for brainstorming.", correctAnswer: 'foster', explanation: "✅ Correct! Different types of work need different environments. Flexible spaces support the full innovation cycle." },
+        
+        // HARD
+        { id: 11, difficulty: 'hard', prompt: "A team prototypes a new idea in 2 weeks, tests with users, and iterates based on feedback.", correctAnswer: 'foster', explanation: "✅ Correct! Rapid prototyping and user feedback is the heart of modern innovation. Fail fast, learn faster." },
+        { id: 12, difficulty: 'hard', prompt: "The company copies successful features from competitors instead of creating original solutions.", correctAnswer: 'kill', explanation: "✅ Correct! While learning from others is smart, true innovation requires original thinking. Copying limits long-term growth." },
+        { id: 13, difficulty: 'hard', prompt: "Leaders set a clear vision but give teams freedom to decide HOW to achieve it.", correctAnswer: 'foster', explanation: "✅ Correct! This balance is powerful: clear direction + autonomy. Teams innovate best when they own the 'how'." },
+        { id: 14, difficulty: 'hard', prompt: "Performance reviews only measure short-term results, not learning or experimentation.", correctAnswer: 'kill', explanation: "✅ Correct! If only short-term wins are rewarded, people avoid risky ideas. Balance metrics." },
+        { id: 15, difficulty: 'hard', prompt: "The company has a formal process to review and fund employee ideas, with transparent criteria.", correctAnswer: 'foster', explanation: "✅ Correct! Structured idea management helps good innovations get resources. Transparency builds trust." },
+        { id: 16, difficulty: 'hard', prompt: "Teams are required to document every small decision in detailed reports before moving forward.", correctAnswer: 'kill', explanation: "✅ Correct! Excessive documentation creates bureaucracy. Focus on what matters for learning." },
+        { id: 17, difficulty: 'hard', prompt: "The organization regularly invites customers to co-create new products with development teams.", correctAnswer: 'foster', explanation: "✅ Correct! User co-creation ensures innovations solve real problems. Customers are the best source of insight." },
+        { id: 18, difficulty: 'hard', prompt: "A manager redirects a team's experimental project to a 'safer', proven approach.", correctAnswer: 'kill', explanation: "✅ Correct! Always choosing 'safe' options prevents breakthrough innovations. Balance is key." },
+        { id: 19, difficulty: 'hard', prompt: "The company has 'innovation time' where employees can explore ideas outside their main projects.", correctAnswer: 'foster', explanation: "✅ Correct! Dedicated time for exploration leads to unexpected innovations." },
+        { id: 20, difficulty: 'hard', prompt: "Success is defined only by revenue growth, not by learning or customer satisfaction.", correctAnswer: 'kill', explanation: "✅ Correct! Narrow success metrics discourage long-term innovation. Balanced scorecards support sustainable growth." }
+      ]
+    };
+
+    // === GAME STATE ===
+    const state = {
+      currentQuestionIndex: 0,
+      score: 0,
+      timer: null,
+      timeRemaining: CONFIG.timerDuration,
+      timerEnabled: false,
+      soundEnabled: true,
+      currentScenario: null,
+      answered: false,
+      audioContext: null,
+      scenarios: []
+    };
+
+    // === DOM ELEMENTS ===
+    const elements = {
+      screens: {
+        intro: document.getElementById('screen-intro'),
+        game: document.getElementById('screen-game'),
+        result: document.getElementById('screen-result')
+      },
+      buttons: {
+        start: document.getElementById('startBtn'),
+        foster: document.getElementById('btnFoster'),
+        kill: document.getElementById('btnKill'),
+        next: document.getElementById('nextBtn'),
+        playAgain: document.getElementById('playAgainBtn'),
+        backHome: document.getElementById('backHomeBtn')
+      },
+      toggles: {
+        timer: document.getElementById('timerToggle'),
+        sound: document.getElementById('soundToggle')
+      },
+      displays: {
+        progress: document.getElementById('progressText'),
+        score: document.getElementById('scoreText'),
+        timerBar: document.getElementById('timerBar'),
+        timerFill: document.getElementById('timerFill'),
+        scenarioTitle: document.getElementById('scenarioTitle'),
+        scenarioPrompt: document.getElementById('scenarioPrompt'),
+        feedback: document.getElementById('feedback'),
+        feedbackBadge: document.getElementById('feedbackBadge'),
+        feedbackText: document.getElementById('feedbackText'),
+        resultScore: document.getElementById('resultScore'),
+        resultBadge: document.getElementById('resultBadge'),
+        resultMessage: document.getElementById('resultMessage'),
+        confetti: document.getElementById('confetti')
+      }
+    };
+
+    // === AUDIO SYSTEM ===
+    const Audio = {
+      init() {
+        try {
+          state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+          console.log('Web Audio API not supported');
+          state.soundEnabled = false;
+          elements.toggles.sound.checked = false;
+        }
+      },
+      
+      playTone(frequency, duration, type = 'sine') {
+        if (!state.soundEnabled || !state.audioContext) return;
+        const oscillator = state.audioContext.createOscillator();
+        const gainNode = state.audioContext.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(state.audioContext.destination);
+        oscillator.type = type;
+        oscillator.frequency.value = frequency;
+        gainNode.gain.setValueAtTime(0.15, state.audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, state.audioContext.currentTime + duration);
+        oscillator.start(state.audioContext.currentTime);
+        oscillator.stop(state.audioContext.currentTime + duration);
+      },
+      
+      correct() { this.playTone(523.25, 0.15); setTimeout(() => this.playTone(659.25, 0.15), 100); },
+      incorrect() { this.playTone(200, 0.2, 'square'); },
+      timeout() { this.playTone(150, 0.3, 'sawtooth'); },
+      start() { this.playTone(440, 0.1); },
+      complete() {
+        [440, 554.37, 659.25, 880].forEach((freq, i) => setTimeout(() => this.playTone(freq, 0.15), i * 100));
+      }
+    };
+
+    // === CONFETTI SYSTEM ===
+    const Confetti = {
+      canvas: elements.displays.confetti,
+      ctx: null,
+      particles: [],
+      active: false,
+      
+      init() {
+        this.ctx = this.canvas.getContext('2d');
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+      },
+      
+      resize() {
+        this.canvas.width = this.canvas.offsetWidth;
+        this.canvas.height = this.canvas.offsetHeight;
+      },
+      
+      start() {
+        this.active = true;
+        this.canvas.classList.add('active');
+        this.particles = [];
+        for (let i = 0; i < 150; i++) {
+          this.particles.push({
+            x: Math.random() * this.canvas.width,
+            y: Math.random() * this.canvas.height - this.canvas.height,
+            size: Math.random() * 5 + 2,
+            speedY: Math.random() * 3 + 2,
+            speedX: Math.random() * 2 - 1,
+            color: this.randomColor(),
+            rotation: Math.random() * 360,
+            rotationSpeed: Math.random() * 10 - 5
+          });
+        }
+        this.animate();
+      },
+      
+      randomColor() {
+        const colors = ['#003366', '#0055A4', '#6699CC', '#10b981', '#f59e0b', '#ef4444'];
+        return colors[Math.floor(Math.random() * colors.length)];
+      },
+      
+      animate() {
+        if (!this.active) return;
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.particles.forEach(p => {
+          p.y += p.speedY; p.x += p.speedX; p.rotation += p.rotationSpeed;
+          if (p.y > this.canvas.height) { p.y = -10; p.x = Math.random() * this.canvas.width; }
+          this.ctx.save();
+          this.ctx.translate(p.x, p.y);
+          this.ctx.rotate(p.rotation * Math.PI / 180);
+          this.ctx.fillStyle = p.color;
+          this.ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+          this.ctx.restore();
+        });
+        requestAnimationFrame(() => this.animate());
+      },
+      
+      stop() {
+        this.active = false;
+        this.canvas.classList.remove('active');
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      }
+    };
+
+    // === GAME LOGIC ===
+    const Game = {
+      init() {
+        this.bindEvents();
+        this.loadSettings();
+        Audio.init();
+        Confetti.init();
+      },
+      
+      bindEvents() {
+        elements.buttons.start.addEventListener('click', () => { Audio.start(); this.startGame(); });
+        elements.buttons.foster.addEventListener('click', () => this.handleAnswer('foster'));
+        elements.buttons.kill.addEventListener('click', () => this.handleAnswer('kill'));
+        elements.buttons.next.addEventListener('click', () => this.nextQuestion());
+        elements.buttons.playAgain.addEventListener('click', () => { Audio.start(); this.startGame(); });
+        elements.buttons.backHome.addEventListener('click', () => this.showScreen('intro'));
+        
+        elements.toggles.timer.addEventListener('change', (e) => { state.timerEnabled = e.target.checked; this.saveSettings(); });
+        elements.toggles.sound.addEventListener('change', (e) => { 
+          state.soundEnabled = e.target.checked; 
+          this.saveSettings();
+          if (state.soundEnabled && state.audioContext?.state === 'suspended') state.audioContext.resume();
+        });
+        
+        document.addEventListener('keydown', (e) => {
+          if (elements.screens.game.classList.contains('active') && !state.answered) {
+            if (e.key === '1' || e.key === 'ArrowLeft') elements.buttons.foster.click();
+            else if (e.key === '2' || e.key === 'ArrowRight') elements.buttons.kill.click();
+          }
+          if (e.key === 'Enter' && !elements.buttons.next.disabled) elements.buttons.next.click();
+        });
+      },
+      
+      loadSettings() {
+        const saved = localStorage.getItem('innovationGameSettings');
+        if (saved) {
+          const settings = JSON.parse(saved);
+          state.timerEnabled = settings.timer ?? false;
+          state.soundEnabled = settings.sound ?? true;
+          elements.toggles.timer.checked = state.timerEnabled;
+          elements.toggles.sound.checked = state.soundEnabled;
+        }
+      },
+      
+      saveSettings() {
+        localStorage.setItem('innovationGameSettings', JSON.stringify({ timer: state.timerEnabled, sound: state.soundEnabled }));
+      },
+      
+      showScreen(screenName) {
+        Object.values(elements.screens).forEach(screen => screen.classList.remove('active'));
+        elements.screens[screenName].classList.add('active');
+      },
+      
+      startGame() {
+        state.currentQuestionIndex = 0;
+        state.score = 0;
+        state.answered = false;
+        elements.displays.score.textContent = `Score: ${state.score}`;
+        state.scenarios = this.selectScenarios();
+        this.showScreen('game');
+        this.loadQuestion();
+      },
+      
+      selectScenarios() {
+        const byDifficulty = {
+          easy: CONFIG.scenarios.filter(s => s.difficulty === 'easy'),
+          medium: CONFIG.scenarios.filter(s => s.difficulty === 'medium'),
+          hard: CONFIG.scenarios.filter(s => s.difficulty === 'hard')
+        };
+        const selected = [];
+        const pattern = CONFIG.scaffoldedDifficulty;
+        pattern.forEach(difficulty => {
+          const pool = byDifficulty[difficulty];
+          const randomIndex = Math.floor(Math.random() * pool.length);
+          selected.push(pool[randomIndex]);
+          byDifficulty[difficulty].splice(randomIndex, 1);
+        });
+        return selected;
+      },
+      
+      loadQuestion() {
+        const scenario = state.scenarios[state.currentQuestionIndex];
+        state.currentScenario = scenario;
+        state.answered = false;
+        
+        elements.displays.progress.textContent = `Q${state.currentQuestionIndex + 1} / ${CONFIG.totalQuestions}`;
+        elements.displays.scenarioTitle.textContent = `Scenario ${scenario.id}`;
+        elements.displays.scenarioPrompt.textContent = scenario.prompt;
+        
+        elements.displays.feedback.classList.remove('show');
+        elements.buttons.next.disabled = true;
+        elements.buttons.foster.disabled = false;
+        elements.buttons.kill.disabled = false;
+        
+        // ✅ FIX: Change button text on last question
+        const isLastQuestion = state.currentQuestionIndex === CONFIG.totalQuestions - 1;
+        elements.buttons.next.textContent = isLastQuestion ? '🏆 See Results' : '→ Next Question';
+        
+        if (state.timerEnabled) {
+          state.timeRemaining = CONFIG.timerDuration;
+          elements.displays.timerBar.classList.remove('hidden', 'warning', 'danger');
+          elements.displays.timerFill.style.width = '100%';
+          elements.displays.timerBar.setAttribute('aria-valuenow', CONFIG.timerDuration);
+          this.startTimer();
+        } else {
+          elements.displays.timerBar.classList.add('hidden');
+        }
+        
+        elements.buttons.foster.focus();
+      },
+      
+      startTimer() {
+        if (state.timer) clearInterval(state.timer);
+        state.timer = setInterval(() => {
+          state.timeRemaining--;
+          const percentage = (state.timeRemaining / CONFIG.timerDuration) * 100;
+          elements.displays.timerFill.style.width = `${percentage}%`;
+          elements.displays.timerBar.setAttribute('aria-valuenow', state.timeRemaining);
+          if (state.timeRemaining <= 3) elements.displays.timerBar.classList.add('danger');
+          else if (state.timeRemaining <= 6) elements.displays.timerBar.classList.add('warning');
+          if (state.timeRemaining <= 0) this.handleTimeout();
+        }, 1000);
+      },
+      
+      handleTimeout() {
+        if (state.answered) return;
+        clearInterval(state.timer);
+        state.answered = true;
+        Audio.timeout();
+        elements.buttons.foster.disabled = true;
+        elements.buttons.kill.disabled = true;
+        this.showFeedback(false, true);
+      },
+      
+      handleAnswer(choice) {
+        if (state.answered) return;
+        clearInterval(state.timer);
+        state.answered = true;
+        const isCorrect = choice === state.currentScenario.correctAnswer;
+        if (isCorrect) {
+          state.score += CONFIG.pointsPerCorrect;
+          elements.displays.score.textContent = `Score: ${state.score}`;
+          Audio.correct();
+        } else {
+          Audio.incorrect();
+        }
+        elements.buttons.foster.disabled = true;
+        elements.buttons.kill.disabled = true;
+        this.showFeedback(isCorrect, false);
+      },
+      
+      showFeedback(isCorrect, isTimeout) {
+        const badge = elements.displays.feedbackBadge;
+        const text = elements.displays.feedbackText;
+        
+        if (isTimeout) {
+          badge.textContent = '⏱️ Time\'s up!';
+          badge.className = 'badge timeout';
+          text.textContent = `Correct answer: ${state.currentScenario.correctAnswer === 'foster' ? '✅ Foster' : '🚫 Kill'}` + 
+                           `\n\n${state.currentScenario.explanation.replace('✅ Correct! ', '')}`;
+        } else if (isCorrect) {
+          badge.textContent = '✅ Correct!';
+          badge.className = 'badge correct';
+          text.textContent = state.currentScenario.explanation;
+        } else {
+          badge.textContent = '❌ Not quite';
+          badge.className = 'badge incorrect';
+          text.textContent = `Correct answer: ${state.currentScenario.correctAnswer === 'foster' ? '✅ Foster' : '🚫 Kill'}` + 
+                           `\n\n${state.currentScenario.explanation.replace('✅ Correct! ', '')}`;
+        }
+        
+        elements.displays.feedback.classList.add('show');
+        elements.buttons.next.disabled = false;
+        elements.buttons.next.focus();
+      },
+      
+      nextQuestion() {
+        state.currentQuestionIndex++;
+        if (state.currentQuestionIndex < CONFIG.totalQuestions) {
+          this.loadQuestion();
+        } else {
+          this.endGame();
+        }
+      },
+      
+      endGame() {
+        if (state.timer) clearInterval(state.timer);
+        
+        // ✅ FIX: High contrast result display
+        elements.displays.resultScore.textContent = `${state.score}`;
+        
+        const percentage = state.score / (CONFIG.totalQuestions * CONFIG.pointsPerCorrect);
+        const badgeEl = elements.displays.resultBadge;
+        const messageEl = elements.displays.resultMessage;
+        
+        if (percentage >= 0.8) {
+          badgeEl.textContent = '🌟 Innovation Champion!';
+          badgeEl.className = 'result-badge excellent';
+          messageEl.textContent = 'Excellent! You understand what helps innovation grow.';
+          Audio.complete();
+          Confetti.start();
+        } else if (percentage >= 0.6) {
+          badgeEl.textContent = '👍 Great Progress!';
+          badgeEl.className = 'result-badge good';
+          messageEl.textContent = 'Well done! You\'re learning the keys to innovation culture.';
+          Audio.complete();
+        } else {
+          badgeEl.textContent = '💪 Keep Learning!';
+          badgeEl.className = 'result-badge try-again';
+          messageEl.textContent = 'Every attempt teaches you something. Try again to improve!';
+        }
+        
+        this.showScreen('result');
+      }
+    };
+
+    // === INITIALIZE ===
+    document.addEventListener('DOMContentLoaded', () => {
+      Game.init();
+    });
+  </script>
+</body>
+</html>
